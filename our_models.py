@@ -8,10 +8,10 @@ class EEGViT_pretrained(nn.Module):
         super().__init__()
 
     def fit(self, trainX, trainY, validX, validY):
-        #TODO
+        pass
 
     def predict(self, testX):
-        #TODO
+        pass
 
     def save(self, path):
         import pickle
@@ -53,7 +53,6 @@ class Ours_pretrained(nn.Module):
             nn.Linear(1000,2,bias=True))
 
     def fit(self, trainX, trainY, validX, validY):
-        #TODO
         # Create dataloaders
         trainX = np.transpose(trainX, (0, 2, 1))  # (batch_size, samples, channels) to (bs, ch, samples) as torch conv layers want it
         validX = np.transpose(validX, (0, 2, 1))  # (batch_size, samples, channels) to (bs, ch, samples) as torch conv layers want it
@@ -69,7 +68,7 @@ class Ours_pretrained(nn.Module):
             logging.info('Finished fitting model number {}/{} ...'.format(i+1, self.nb_models))
 
     def predict(self, testX):
-        #TODO
+        pass
 
     def save(self, path):
         import pickle
