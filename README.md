@@ -29,8 +29,8 @@ Alterntatively, just download the python source code files.
 Then copy/move the python source codes to your root EEGEyeNet directory.  
 
 ## Launching Locally
-Make sure your current working directory is EEGEyeNet and have downloaded the datasets and our code. Then execute:  
-`python3 main_CS6907_group_8.py`
+Make sure your current working directory is EEGEyeNet and have downloaded the datasets and our code.  
+Then execute: `python3 main_CS6907_group_8.py`
 
 ## Results
 Once execution is complete, the benchmark results of the models can be found in directory ./runs/*/info.log  
