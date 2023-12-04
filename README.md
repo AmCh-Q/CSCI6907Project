@@ -7,10 +7,11 @@ EEGEyeNet is a [dataset](https://osf.io/ktv7m) as well as a [benchmark](https://
 This repository contains the model as well as our paper proposal.  
 
 ## QuickStart
-[CSCI6907_Group_8.ipynb](https://colab.research.google.com/drive/10Pbkz5nvr2cmPqhuuOsFrV9Xiyn0kzL-?usp=sharing) can be directly launched on Google Colab. It is recommended to set the session runtime to use a V100 GPU or better and enable High-Ram.
+[CSCI6907_Group_8.ipynb](https://github.com/AmCh-Q/CSCI6907Project/blob/main/CSCI6907_Group_8.ipynb) can be [directly launched on Google Colab](https://colab.research.google.com/drive/10Pbkz5nvr2cmPqhuuOsFrV9Xiyn0kzL-?usp=sharing).  
+It is recommended to set the session runtime to use a V100 GPU or better and enable High-Ram.
 
 ## Dependency
-This repository depends on [EEGEyeNet](https://github.com/ardkastrati/EEGEyeNet) as well as its dependencides.  
+This repository depends on [EEGEyeNet](https://github.com/ardkastrati/EEGEyeNet) as well as its requirements.  
 You can use git to clone their repository:  
 `git clone https://github.com/ardkastrati/EEGEyeNet.git`  
 No additional libraries are required.  
@@ -29,7 +30,8 @@ Alterntatively, just download the python source code files.
 Then copy/move the python source codes to your root EEGEyeNet directory.  
 
 ## Launching Locally
-Make sure your current working directory is EEGEyeNet and have downloaded the datasets and our code.  
+Ensure that your system has at least 16GB of VRAM and 16GB of RAM.
+Then make sure your current working directory is EEGEyeNet and have downloaded the datasets and our code.  
 Then execute: `python3 main_CS6907_group_8.py`
 
 ## Results
