@@ -26,18 +26,10 @@ class EEGViT_pretrained(nn.Module):
         filename = path + self.model_name + '.sav'
         self.model = pickle.load(open(filename, 'rb'))
 
-class Ours_Pretrained(nn.Module):
-    def __init__(self, model_name = "Ours_Pretrained", nb_models = 5, batch_size = 64, n_epoch = 15, learning_rate = 1e-4, vit_model_name = "google/vit-base-patch16-224"):
+class Ours_Module(nn.Module):
+    def __init__(self, vit_model_name = "google/vit-base-patch16-224"):
         super().__init__()
-        self.model_name = model_name
-        self.nb_models = nb_models
-        self.models = []
-
-        self.batch_size = batch_size
-        self.n_epoch = n_epoch
-        self.learning_rate = learning_rate
         self.vit_model_name = vit_model_name
-
         self.conv1 = nn.Conv2d(
             in_channels=1,
             out_channels=256,
@@ -50,20 +42,6 @@ class Ours_Pretrained(nn.Module):
         self.model_configs.update({'num_channels': 256})
         self.model_configs.update({'image_size': (129,32)})
         self.model_configs.update({'patch_size': (129,1)})
-        if torch.cuda.is_available():
-            gpu_id = 0    # Change this to the desired GPU ID if you have multiple GPUs
-            torch.cuda.set_device(gpu_id)
-            self.device = torch.device(f"cuda:{gpu_id}")
-        else:
-            self.device = torch.device("cpu")
-
-    def forward(self,x):
-        x=self.conv1(x)
-        x=self.batchnorm1(x)
-        x=self.ViT.forward(x).logits
-        return x
-
-    def create_model(self):
         self.ViT = transformers.ViTForImageClassification.from_pretrained(
             self.vit_model_name, config=self.model_configs, ignore_mismatched_sizes=True)
         self.ViT.vit.embeddings.patch_embeddings.projection = nn.Conv2d(
@@ -74,13 +52,37 @@ class Ours_Pretrained(nn.Module):
             nn.Linear(768,1000,bias=True),
             nn.Dropout(p=0.1),
             nn.Linear(1000,2,bias=True))
-        self.model = self
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
+    def forward(self,x):
+        x=self.conv1(x)
+        x=self.batchnorm1(x)
+        x=self.ViT.forward(x).logits
+        return x
+
+class Ours_Pretrained():
+    def __init__(self, model_name = "Ours_Pretrained", nb_models = 5, batch_size = 64, n_epoch = 15, learning_rate = 1e-4, vit_model_name = "google/vit-base-patch16-224"):
+        super().__init__()
+        self.model_name = model_name
+        self.nb_models = nb_models
+        self.batch_size = batch_size
+        self.n_epoch = n_epoch
+        self.learning_rate = learning_rate
+        self.vit_model_name = vit_model_name
+        self.models = []
+        self.criterion = nn.MSELoss()
+        if torch.cuda.is_available():
+            gpu_id = 0    # Change this to the desired GPU ID if you have multiple GPUs
+            torch.cuda.set_device(gpu_id)
+            self.device = torch.device(f"cuda:{gpu_id}")
+        else:
+            self.device = torch.device("cpu")
+
+    def create_model(self):
+        model = Ours_Module(vit_model_name = self.vit_model_name)
+        self.optimizer = torch.optim.Adam(model.parameters(), lr=self.learning_rate)
         self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=6, gamma=0.1)
         if torch.cuda.device_count() > 1:
             self.model = nn.DataParallel(self.model)
-        self.model = self.model.to(self.device)
-        self.criterion = nn.MSELoss().to(self.device)
+        return model
 
     def fit(self, trainX, trainY, validX, validY):
         # Create dataloaders
@@ -92,19 +94,19 @@ class Ours_Pretrained(nn.Module):
         for i in range(self.nb_models):
             logging.info("------------------------------------------------------------------------------------")
             logging.info('Start fitting model number {}/{} ...'.format(i+1, self.nb_models))
-            self.create_model()
+            model = self.create_model()
             for epoch in range(self.n_epoch):
                 logging.info("-------------------------------")
                 logging.info(f"Epoch {epoch+1}")
                 # Train the model
-                self.model.train()
+                model.train()
                 epoch_train_loss = 0.0
                 for index, (inputs, targets) in tqdm(enumerate(train_dataloader)):
                     # Move the inputs and targets to the GPU (if available)
                     inputs = inputs.to(self.device)
                     targets = targets.to(self.device)
                     # Compute the outputs and loss for the current batch
-                    outputs = self.model(inputs)
+                    outputs = model(inputs)
                     loss = criterion(outputs.squeeze(), targets.squeeze())
                     # Compute the gradients and update the parameters
                     self.optimizer.zero_grad()
@@ -118,7 +120,7 @@ class Ours_Pretrained(nn.Module):
                 logging.info(f"Avg training loss: {epoch_train_loss:>7f}")
                 print(f"Epoch {epoch+1}, Training Loss: {epoch_train_loss}", end='')
                 # Evaluate the model
-                self.model.eval()
+                model.eval()
                 with torch.no_grad():
                     val_loss = 0.0
                     for index, (inputs, targets) in enumerate(validation_dataloader):
@@ -126,13 +128,13 @@ class Ours_Pretrained(nn.Module):
                         inputs = inputs.to(self.device)
                         targets = targets.to(self.device)
                         # Compute the outputs and loss for the current batch
-                        outputs = self.model(inputs)
+                        outputs = model(inputs)
                         loss = criterion(outputs.squeeze(), targets.squeeze())
                         val_loss += loss.item()
                     val_loss /= len(validation_dataloader)
                 logging.info(f"Avg validation loss: {val_loss:>8f}")
                 print(f"Epoch {epoch+1}, Val Loss: {val_loss}")
-            self.models.append(self.model)
+            self.models.append(model)
             logging.info('Finished fitting model number {}/{} ...'.format(i+1, self.nb_models))
 
     def predict(self, testX):
@@ -144,12 +146,11 @@ class Ours_Pretrained(nn.Module):
         test_dataloader = create_dataloader(testX, testX, self.batch_size, self.model_name, drop_last=False)
         pred = None
         for model in self.models:
-            self.model = model
             for index, (inputs, _) in enumerate(test_dataloader):
                 # Move the inputs to the GPU (if available)
                 inputs = inputs.to(self.device)
                 # Compute the outputs
-                outputs = self.model(inputs)
+                outputs = model(inputs)
                 if batch == 0:
                     all_pred = outputs.cpu()
                 else:
