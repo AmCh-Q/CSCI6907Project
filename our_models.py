@@ -92,7 +92,7 @@ class Ours_Pretrained(nn.Module):
             logging.info("------------------------------------------------------------------------------------")
             logging.info('Start fitting model number {}/{} ...'.format(i+1, self.nb_models))
             model = self.create_model()
-            for epoch in range(n_epoch):
+            for epoch in range(self.n_epoch):
                 logging.info("-------------------------------")
                 logging.info(f"Epoch {epoch+1}")
                 # Train the model
