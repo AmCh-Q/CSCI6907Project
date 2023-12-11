@@ -55,14 +55,6 @@ class Ours_Pretrained():
         else:
             self.device = torch.device("cpu")
 
-    def create_model(self):
-        model = Ours_Module(vit_model_name = self.vit_model_name)
-        self.optimizer = torch.optim.Adam(model.parameters(), lr=self.learning_rate)
-        self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=6, gamma=0.1)
-        if torch.cuda.device_count() > 1:
-            self.model = nn.DataParallel(self.model)
-        return model
-
     def fit(self, trainX, trainY, validX, validY):
         # Create dataloaders
         trainX = np.transpose(trainX, (0, 2, 1))[:,np.newaxis,:,:]
@@ -73,7 +65,9 @@ class Ours_Pretrained():
         for i in range(self.nb_models):
             logging.info("------------------------------------------------------------------------------------")
             logging.info('Start fitting model number {}/{} ...'.format(i+1, self.nb_models))
-            model = self.create_model()
+            model = Ours_Module(vit_model_name = self.vit_model_name)
+            optimizer = torch.optim.Adam(model.parameters(), lr=self.learning_rate)
+            scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=6, gamma=0.1)
             model = model.to(self.device)
             for epoch in range(self.n_epoch):
                 logging.info("-------------------------------")
@@ -89,9 +83,9 @@ class Ours_Pretrained():
                     outputs = model(inputs)
                     loss = self.criterion(outputs.squeeze(), targets.squeeze())
                     # Compute the gradients and update the parameters
-                    self.optimizer.zero_grad()
+                    optimizer.zero_grad()
                     loss.backward()
-                    self.optimizer.step()
+                    optimizer.step()
                     epoch_train_loss += loss.item()
                 epoch_train_loss /= len(train_dataloader)
                 logging.info(f"Avg training loss: {epoch_train_loss:>7f}")
@@ -111,7 +105,7 @@ class Ours_Pretrained():
                     val_loss /= len(validation_dataloader)
                 logging.info(f"Avg validation loss: {val_loss:>8f}")
                 print(f"Epoch {epoch+1}, Val Loss: {val_loss}")
-                self.scheduler.step()
+                scheduler.step()
             self.models.append(model)
             logging.info('Finished fitting model number {}/{} ...'.format(i+1, self.nb_models))
 
@@ -154,7 +148,7 @@ class Ours_Pretrained():
                 continue
             # These 2 lines are needed for torch to load
             logging.info(f"Loading model nb from file {file} and predict with it")
-            model = self.create_model()  # model = TheModelClass(*args, **kwargs)
+            model = Ours_Module(vit_model_name = self.vit_model_name)  # model = TheModelClass(*args, **kwargs)
             #print(path + file)
             model.load_state_dict(torch.load(path + file))  # model.load_state_dict(torch.load(PATH))
             model.eval()  # needed before prediction
