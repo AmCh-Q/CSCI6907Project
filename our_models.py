@@ -114,8 +114,6 @@ class Ours_Pretrained():
                     loss.backward()
                     self.optimizer.step()
                     epoch_train_loss += loss.item()
-                    # Print the loss and accuracy for the current batch
-                    print(f"Epoch {epoch+1}, Batch {index+1}, Training Loss: {loss.item()}")
                 epoch_train_loss /= len(train_dataloader)
                 logging.info(f"Avg training loss: {epoch_train_loss:>7f}")
                 print(f"Epoch {epoch+1}, Training Loss: {epoch_train_loss}")
@@ -152,7 +150,7 @@ class Ours_Pretrained():
                 inputs = inputs.to(self.device)
                 # Compute the outputs
                 outputs = model(inputs)
-                if batch == 0:
+                if index == 0:
                     all_pred = outputs.cpu()
                 else:
                     all_pred = torch.cat((all_pred, outputs.cpu()))
