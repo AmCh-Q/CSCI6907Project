@@ -118,7 +118,7 @@ class Ours_Pretrained():
                     print(f"Epoch {epoch+1}, Batch {index+1}, Training Loss: {loss.item()}", end='')
                 epoch_train_loss /= len(train_dataloader)
                 logging.info(f"Avg training loss: {epoch_train_loss:>7f}")
-                print(f"Epoch {epoch+1}, Training Loss: {epoch_train_loss}", end='')
+                print(f"Epoch {epoch+1}, Training Loss: {epoch_train_loss}")
                 # Evaluate the model
                 model.eval()
                 with torch.no_grad():
