@@ -2,7 +2,7 @@
 from config import config, build_file_name
 config['task'] = 'Position_task'
 config['dataset'] = 'dots'
-config['preprocessing'] = 'min' # or max
+config['preprocessing'] = 'min'
 config['feature_extraction'] = True # must be set to True for ML_models operating on feature extracted data
 config['include_ML_models'] = True
 config['include_DL_models'] = True
@@ -18,7 +18,13 @@ additional_models = {
         'dots' : {
             'min_temp' : {
                 #'EEGViT': EEGViT_pretrained,
-                'Ours': Ours_Pretrained
+                'Ours': [Ours_Pretrained, {
+                    'model_name': "Ours_Pretrained",
+                    'nb_models': 5,
+                    'batch_size': 64,
+                    'n_epoch': 15,
+                    'learning_rate': 1e-4,
+                    'vit_model_name': "google/vit-base-patch16-224"}]
             }
         }
     }

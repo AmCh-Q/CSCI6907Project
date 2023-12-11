@@ -26,9 +26,9 @@ class EEGViT_pretrained(nn.Module):
         self.model = pickle.load(open(filename, 'rb'))
 
 class Ours_Pretrained(nn.Module):
-    def __init__(self, nb_models = 5, batch_size = 64, n_epoch = 15, learning_rate = 1e-4, vit_model_name = "google/vit-base-patch16-224"):
+    def __init__(self, model_name = "Ours_Pretrained", nb_models = 5, batch_size = 64, n_epoch = 15, learning_rate = 1e-4, vit_model_name = "google/vit-base-patch16-224"):
         super().__init__()
-        self.model_name = "Ours_Pretrained"
+        self.model_name = model_name
         self.nb_models = nb_models
         self.models = []
 
