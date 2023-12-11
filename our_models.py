@@ -60,20 +60,21 @@ class Ours_Pretrained(nn.Module):
     def forward(self,x):
         x=self.conv1(x)
         x=self.batchnorm1(x)
-        x=self.model.forward(x).logits
+        x=self.ViT.forward(x).logits
         return x
 
     def create_model(self):
-        self.model = transformers.ViTForImageClassification.from_pretrained(
+        self.ViT = transformers.ViTForImageClassification.from_pretrained(
             self.vit_model_name, config=self.model_configs, ignore_mismatched_sizes=True)
-        self.model.vit.embeddings.patch_embeddings.projection = nn.Conv2d(
+        self.ViT.vit.embeddings.patch_embeddings.projection = nn.Conv2d(
             256, 768,
             kernel_size=(129,1), stride=(129,1), padding=(0,0),
             groups=256)
-        self.model.classifier = nn.Sequential(
+        self.ViT.classifier = nn.Sequential(
             nn.Linear(768,1000,bias=True),
             nn.Dropout(p=0.1),
             nn.Linear(1000,2,bias=True))
+        self.model = self
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
         self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=6, gamma=0.1)
         if torch.cuda.device_count() > 1:
