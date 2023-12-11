@@ -3,7 +3,7 @@ from config import config, build_file_name
 config['task'] = 'Position_task'
 config['dataset'] = 'dots'
 config['preprocessing'] = 'min'
-config['feature_extraction'] = True # must be set to True for ML_models operating on feature extracted data
+config['feature_extraction'] = False # our model works on non-feature-extracted data
 config['include_ML_models'] = True
 config['include_DL_models'] = True
 config['include_your_models'] = True

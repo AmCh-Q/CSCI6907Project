@@ -5,7 +5,7 @@ import transformers
 import logging
 from DL_Models.torch_models.torch_utils.dataloader import create_dataloader
 
-class Ours_Module(nn.Module):
+class EEGViT_pretrained_module(nn.Module):
     def __init__(self, vit_model_name = "google/vit-base-patch16-224"):
         super().__init__()
         self.vit_model_name = vit_model_name
@@ -16,17 +16,23 @@ class Ours_Module(nn.Module):
             stride=(1,16),
             padding=(0,6),
             bias=False)
+        self.conv1 = nn.Conv2d(
+            in_channels=1,
+            out_channels=256,
+            kernel_size=(1, 36),
+            stride=(1, 36),
+            padding=(0,2),
+            bias=False)
         self.batchnorm1 = nn.BatchNorm2d(256, False)
         self.model_configs = transformers.ViTConfig.from_pretrained(self.vit_model_name)
         self.model_configs.update({'num_channels': 256})
-        self.model_configs.update({'image_size': (129,32)})
-        self.model_configs.update({'patch_size': (129,1)})
+        self.model_configs.update({'image_size': (129,14)})
+        self.model_configs.update({'patch_size': (8,1)})
         self.ViT = transformers.ViTForImageClassification.from_pretrained(
             self.vit_model_name, config=self.model_configs, ignore_mismatched_sizes=True)
         self.ViT.vit.embeddings.patch_embeddings.projection = nn.Conv2d(
             256, 768,
-            kernel_size=(129,1), stride=(129,1), padding=(0,0),
-            groups=256)
+            kernel_size=(8,1), stride=(8,1), padding=(0,0), groups=256)
         self.ViT.classifier = nn.Sequential(
             nn.Linear(768,1000,bias=True),
             nn.Dropout(p=0.1),
@@ -37,8 +43,8 @@ class Ours_Module(nn.Module):
         x=self.ViT.forward(x).logits
         return x
 
-class Ours_Pretrained():
-    def __init__(self, model_name = "Ours_Pretrained", nb_models = 5, batch_size = 64, n_epoch = 15, learning_rate = 1e-4, vit_model_name = "google/vit-base-patch16-224"):
+class EEGViT_Pretrained():
+    def __init__(self, model_name = "EEGViT_Pretrained", nb_models = 5, batch_size = 64, n_epoch = 15, learning_rate = 1e-4, vit_model_name = "google/vit-base-patch16-224"):
         super().__init__()
         self.model_name = model_name
         self.nb_models = nb_models
@@ -56,7 +62,7 @@ class Ours_Pretrained():
             self.device = torch.device("cpu")
 
     def create_model(self):
-        model = Ours_Module(vit_model_name = self.vit_model_name)
+        model = EEGViT_pretrained_module(vit_model_name = self.vit_model_name)
         self.optimizer = torch.optim.Adam(model.parameters(), lr=self.learning_rate)
         self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=6, gamma=0.1)
         if torch.cuda.device_count() > 1:

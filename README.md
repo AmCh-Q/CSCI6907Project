@@ -8,7 +8,7 @@ This repository contains the model as well as our paper proposal.
 
 ## QuickStart
 [CSCI6907_Group_8.ipynb](https://github.com/AmCh-Q/CSCI6907Project/blob/main/CSCI6907_Group_8.ipynb) can be [directly launched on Google Colab](https://colab.research.google.com/drive/10Pbkz5nvr2cmPqhuuOsFrV9Xiyn0kzL-?usp=sharing).  
-It is recommended to set the session runtime to use a V100 GPU or better and enable High-Ram.
+It is recommended to set the session runtime to use a A100 GPU or better and enable High-Ram.
 
 ## Dependency
 This repository depends on [EEGEyeNet](https://github.com/ardkastrati/EEGEyeNet) as well as its requirements.  
