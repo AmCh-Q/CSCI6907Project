@@ -115,7 +115,7 @@ class Ours_Pretrained():
                     self.optimizer.step()
                     epoch_train_loss += loss.item()
                     # Print the loss and accuracy for the current batch
-                    print(f"Epoch {epoch+1}, Batch {index+1}, Training Loss: {loss.item()}", end='')
+                    print(f"Epoch {epoch+1}, Batch {index+1}, Training Loss: {loss.item()}")
                 epoch_train_loss /= len(train_dataloader)
                 logging.info(f"Avg training loss: {epoch_train_loss:>7f}")
                 print(f"Epoch {epoch+1}, Training Loss: {epoch_train_loss}")
