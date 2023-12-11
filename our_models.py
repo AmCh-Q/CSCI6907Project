@@ -3,6 +3,7 @@ from torch import nn
 import numpy as np
 import transformers
 import logging
+from tqdm import tqdm
 from DL_Models.torch_models.torch_utils.dataloader import create_dataloader
 
 class EEGViT_pretrained(nn.Module):
