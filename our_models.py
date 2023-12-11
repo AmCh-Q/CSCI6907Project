@@ -3,7 +3,6 @@ from torch import nn
 import numpy as np
 import transformers
 import logging
-from tqdm import tqdm
 from DL_Models.torch_models.torch_utils.dataloader import create_dataloader
 
 class EEGViT_pretrained(nn.Module):
@@ -102,7 +101,7 @@ class Ours_Pretrained():
                 # Train the model
                 model.train()
                 epoch_train_loss = 0.0
-                for index, (inputs, targets) in tqdm(enumerate(train_dataloader)):
+                for index, (inputs, targets) in enumerate(train_dataloader):
                     # Move the inputs and targets to the GPU (if available)
                     inputs = inputs.to(self.device)
                     targets = targets.to(self.device)
