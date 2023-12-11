@@ -108,7 +108,7 @@ class Ours_Pretrained():
                     targets = targets.to(self.device)
                     # Compute the outputs and loss for the current batch
                     outputs = model(inputs)
-                    loss = criterion(outputs.squeeze(), targets.squeeze())
+                    loss = self.criterion(outputs.squeeze(), targets.squeeze())
                     # Compute the gradients and update the parameters
                     self.optimizer.zero_grad()
                     loss.backward()
@@ -130,11 +130,12 @@ class Ours_Pretrained():
                         targets = targets.to(self.device)
                         # Compute the outputs and loss for the current batch
                         outputs = model(inputs)
-                        loss = criterion(outputs.squeeze(), targets.squeeze())
+                        loss = self.criterion(outputs.squeeze(), targets.squeeze())
                         val_loss += loss.item()
                     val_loss /= len(validation_dataloader)
                 logging.info(f"Avg validation loss: {val_loss:>8f}")
                 print(f"Epoch {epoch+1}, Val Loss: {val_loss}")
+                self.scheduler.step()
             self.models.append(model)
             logging.info('Finished fitting model number {}/{} ...'.format(i+1, self.nb_models))
 
