@@ -145,20 +145,21 @@ class Ours_Pretrained():
         test_dataloader = create_dataloader(testX, testX, self.batch_size, self.model_name, drop_last=False)
         pred = None
         for model in self.models:
-            for index, (inputs, _) in enumerate(test_dataloader):
-                # Move the inputs to the GPU (if available)
-                inputs = inputs.to(self.device)
-                # Compute the outputs
-                outputs = model(inputs)
-                if index == 0:
-                    all_pred = outputs.cpu()
+            with torch.no_grad():
+                for index, (inputs, _) in enumerate(test_dataloader):
+                    # Move the inputs to the GPU (if available)
+                    inputs = inputs.to(self.device)
+                    # Compute the outputs
+                    outputs = model(inputs)
+                    if index == 0:
+                        all_pred = outputs.cpu()
+                    else:
+                        all_pred = torch.cat((all_pred, outputs.cpu()))
+                    torch.cuda.empty_cache()
+                if pred is not None:
+                    pred += all_pred.data.numpy()
                 else:
-                    all_pred = torch.cat((all_pred, outputs.cpu()))
-                torch.cuda.empty_cache()
-            if pred is not None:
-                pred += all_pred.data.numpy()
-            else:
-                pred = all_pred.data.numpy()
+                    pred = all_pred.data.numpy()
         pred = pred[:-a]
         return pred / len(self.models)
 
