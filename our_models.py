@@ -139,9 +139,9 @@ class Ours_Pretrained():
     def predict(self, testX):
         testX = np.transpose(testX, (0, 2, 1))[:,np.newaxis,:,:]
         a,b,c,d = testX.shape
-        a = self.batch_size - a % self.batch_size
+        a = -a % self.batch_size
         dummy = np.zeros((a,b,c,d))
-        testX = np.concatenate((testX, dummy)) # TO ADD batch_size - testX.shape[0]%batch_size
+        testX = np.concatenate((testX, dummy)) # TO MAKE textX multiple of batch_size
         test_dataloader = create_dataloader(testX, testX, self.batch_size, self.model_name, drop_last=False)
         pred = None
         for model in self.models:
@@ -154,6 +154,7 @@ class Ours_Pretrained():
                     all_pred = outputs.cpu()
                 else:
                     all_pred = torch.cat((all_pred, outputs.cpu()))
+                torch.cuda.empty_cache()
             if pred is not None:
                 pred += all_pred.data.numpy()
             else:
