@@ -46,9 +46,9 @@ class Ours_Pretrained(nn.Module):
             bias=False)
         self.batchnorm1 = nn.BatchNorm2d(256, False)
         self.model_configs = transformers.ViTConfig.from_pretrained(self.vit_model_name)
-        config.update({'num_channels': 256})
-        config.update({'image_size': (129,32)})
-        config.update({'patch_size': (129,1)})
+        self.model_configs.update({'num_channels': 256})
+        self.model_configs.update({'image_size': (129,32)})
+        self.model_configs.update({'patch_size': (129,1)})
         if torch.cuda.is_available():
             gpu_id = 0    # Change this to the desired GPU ID if you have multiple GPUs
             torch.cuda.set_device(gpu_id)
