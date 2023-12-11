@@ -99,7 +99,7 @@ class Ours_Pretrained(nn.Module):
                 # Train the model
                 model.train()
                 epoch_train_loss = 0.0
-                for index, inputs, targets in tqdm(enumerate(train_dataloader)):
+                for index, (inputs, targets) in tqdm(enumerate(train_dataloader)):
                     # Move the inputs and targets to the GPU (if available)
                     inputs = inputs.to(self.device)
                     targets = targets.to(self.device)
@@ -121,7 +121,7 @@ class Ours_Pretrained(nn.Module):
                 model.eval()
                 with torch.no_grad():
                     val_loss = 0.0
-                    for index, inputs, targets in enumerate(validation_dataloader):
+                    for index, (inputs, targets) in enumerate(validation_dataloader):
                         # Move the inputs and targets to the GPU (if available)
                         inputs = inputs.to(self.device)
                         targets = targets.to(self.device)
@@ -144,7 +144,7 @@ class Ours_Pretrained(nn.Module):
         test_dataloader = create_dataloader(testX, testX, self.batch_size, self.model_name, drop_last=False)
         pred = None
         for model in self.models:
-            for index, inputs, _ in enumerate(test_dataloader):
+            for index, (inputs, _) in enumerate(test_dataloader):
                 # Move the inputs to the GPU (if available)
                 inputs = inputs.to(self.device)
                 # Compute the outputs
