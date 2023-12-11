@@ -104,10 +104,10 @@ class Ours_Pretrained(nn.Module):
                     inputs = inputs.to(self.device)
                     targets = targets.to(self.device)
                     # Compute the outputs and loss for the current batch
-                    self.optimizer.zero_grad()
                     outputs = model(inputs)
                     loss = criterion(outputs.squeeze(), targets.squeeze())
                     # Compute the gradients and update the parameters
+                    self.optimizer.zero_grad()
                     loss.backward()
                     self.optimizer.step()
                     epoch_train_loss += loss.item()
