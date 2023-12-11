@@ -87,11 +87,6 @@ class Ours_Pretrained():
     def fit(self, trainX, trainY, validX, validY):
         # Create dataloaders
         trainX = np.transpose(trainX, (0, 2, 1))[:,np.newaxis,:,:]
-        print(trainX.shape)
-        print(trainX.shape)
-        print(trainX.shape)
-        print(trainX.shape)
-        print(trainX.shape)
         validX = np.transpose(validX, (0, 2, 1))[:,np.newaxis,:,:]
         train_dataloader = create_dataloader(trainX, trainY, self.batch_size, self.model_name)
         validation_dataloader = create_dataloader(validX, validY, self.batch_size, self.model_name)
@@ -100,6 +95,7 @@ class Ours_Pretrained():
             logging.info("------------------------------------------------------------------------------------")
             logging.info('Start fitting model number {}/{} ...'.format(i+1, self.nb_models))
             model = self.create_model()
+            model = model.to(self.device)
             for epoch in range(self.n_epoch):
                 logging.info("-------------------------------")
                 logging.info(f"Epoch {epoch+1}")
