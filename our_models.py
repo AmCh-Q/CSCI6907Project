@@ -84,8 +84,8 @@ class Ours_Pretrained(nn.Module):
 
     def fit(self, trainX, trainY, validX, validY):
         # Create dataloaders
-        trainX = np.transpose(trainX, (0, 2, 1))  # (batch_size, samples, channels) to (bs, ch, samples) as torch conv layers want it
-        validX = np.transpose(validX, (0, 2, 1))  # (batch_size, samples, channels) to (bs, ch, samples) as torch conv layers want it
+        trainX = np.transpose(trainX, (0, 2, 1))[:,np.newaxis,:,:]
+        validX = np.transpose(validX, (0, 2, 1))[:,np.newaxis,:,:]
         train_dataloader = create_dataloader(trainX, trainY, self.batch_size, self.model_name)
         validation_dataloader = create_dataloader(validX, validY, self.batch_size, self.model_name)
         # Fit the models
@@ -136,10 +136,10 @@ class Ours_Pretrained(nn.Module):
             logging.info('Finished fitting model number {}/{} ...'.format(i+1, self.nb_models))
 
     def predict(self, testX):
-        testX = np.transpose(testX, (0, 2, 1))  # (batch_size, samples, channels) to (bs, ch, samples) as torch conv layers want it
-        a,b,c = testX.shape
+        testX = np.transpose(testX, (0, 2, 1))[:,np.newaxis,:,:]
+        a,b,c,d = testX.shape
         a = self.batch_size - a % self.batch_size
-        dummy = np.zeros((a,b,c))
+        dummy = np.zeros((a,b,c,d))
         testX = np.concatenate((testX, dummy)) # TO ADD batch_size - testX.shape[0]%batch_size
         test_dataloader = create_dataloader(testX, testX, self.batch_size, self.model_name, drop_last=False)
         pred = None
