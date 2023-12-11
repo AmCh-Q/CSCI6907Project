@@ -99,7 +99,7 @@ class Ours_Pretrained(nn.Module):
                 # Train the model
                 model.train()
                 epoch_train_loss = 0.0
-                for i, (index, inputs, targets) in tqdm(enumerate(train_dataloader)):
+                for index, inputs, targets in tqdm(enumerate(train_dataloader)):
                     # Move the inputs and targets to the GPU (if available)
                     inputs = inputs.to(self.device)
                     targets = targets.to(self.device)
@@ -112,8 +112,8 @@ class Ours_Pretrained(nn.Module):
                     self.optimizer.step()
                     epoch_train_loss += loss.item()
                     # Print the loss and accuracy for the current batch
-                    if i in printBatchNumList:
-                        print(f"Epoch {epoch+1}, Batch {i}, Training Loss: {loss.item()}", end='')
+                    if index in printBatchNumList:
+                        print(f"Epoch {epoch+1}, Batch {index}, Training Loss: {loss.item()}", end='')
                 epoch_train_loss /= len(train_dataloader)
                 logging.info(f"Avg training loss: {epoch_train_loss:>7f}")
                 print(f"Epoch {epoch+1}, Training Loss: {epoch_train_loss}", end='')
