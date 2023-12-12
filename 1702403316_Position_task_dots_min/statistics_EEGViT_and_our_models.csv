@@ -1,0 +1,3 @@
+Model,Mean_score,Std_score,Mean_runtime,Std_runtime
+EEGViT,110.68140265102822,0.0,2640.9455890655518,0.0
+Ours_Pretrained,107.7803735121166,0.0,815.8378388881683,0.0
