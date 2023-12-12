@@ -68,6 +68,7 @@ class Ours_Pretrained():
             model = Ours_Module(vit_model_name = self.vit_model_name)
             optimizer = torch.optim.Adam(model.parameters(), lr=self.learning_rate)
             scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=6, gamma=0.1)
+            best_state = None
             model = model.to(self.device)
             for epoch in range(self.n_epoch):
                 logging.info("-------------------------------")
@@ -103,9 +104,16 @@ class Ours_Pretrained():
                         loss = self.criterion(outputs.squeeze(), targets.squeeze())
                         val_loss += loss.item()
                     val_loss /= len(validation_dataloader)
-                logging.info(f"Avg validation loss: {val_loss:>8f}")
-                print(f"Epoch {epoch+1}, Val Loss: {val_loss}")
+                if best_state is None or val_loss < best_state['val_loss']:
+                    logging.info(f"Avg validation loss: {val_loss:>8f} Improved")
+                    print(f"Epoch {epoch+1}, Val Loss {val_loss} Improved")
+                    best_state = {'state': model.state_dict(), 'val_loss': val_loss}
+                else:
+                    logging.info(f"Avg validation loss: {val_loss:>8f} did not improve ({best_state['val_loss']:>8f})")
+                    print(f"Epoch {epoch+1}, Val Loss {val_loss} did not improve ({best_state['val_loss']})")
                 scheduler.step()
+            if best_state is not None:
+                model.load_state_dict(best_state['state'])
             self.models.append(model)
             logging.info('Finished fitting model number {}/{} ...'.format(i+1, self.nb_models))
 
