@@ -1,0 +1,77 @@
+INFO:root:Started the Logging
+INFO:root:Using pytorch
+INFO:root:Loading Position_task_with_dots_synchronised_min.npz
+INFO:root:X training loaded.
+INFO:root:(21464, 500, 129)
+INFO:root:y training loaded.
+INFO:root:(21464, 3)
+INFO:root:Training the models
+INFO:root:Training of Ours_Pretrained
+INFO:root:<our_models.Ours_Pretrained object at 0x7f98b128b880>
+INFO:root:------------------------------------------------------------------------------------
+INFO:root:Start fitting model number 1/1 ...
+INFO:root:-------------------------------
+INFO:root:Epoch 1
+INFO:root:Avg training loss: 75055.756740
+INFO:root:Avg validation loss: 26517.299072 Improved
+INFO:root:-------------------------------
+INFO:root:Epoch 2
+INFO:root:Avg training loss: 24411.694764
+INFO:root:Avg validation loss: 22613.417521 Improved
+INFO:root:-------------------------------
+INFO:root:Epoch 3
+INFO:root:Avg training loss: 20045.981046
+INFO:root:Avg validation loss: 17080.490702 Improved
+INFO:root:-------------------------------
+INFO:root:Epoch 4
+INFO:root:Avg training loss: 15557.592782
+INFO:root:Avg validation loss: 15558.117655 Improved
+INFO:root:-------------------------------
+INFO:root:Epoch 5
+INFO:root:Avg training loss: 13986.271422
+INFO:root:Avg validation loss: 15757.677409 did not improve (15558.117655)
+INFO:root:-------------------------------
+INFO:root:Epoch 6
+INFO:root:Avg training loss: 13359.823897
+INFO:root:Avg validation loss: 15947.507711 did not improve (15558.117655)
+INFO:root:-------------------------------
+INFO:root:Epoch 7
+INFO:root:Avg training loss: 11827.493388
+INFO:root:Avg validation loss: 14472.641998 Improved
+INFO:root:-------------------------------
+INFO:root:Epoch 8
+INFO:root:Avg training loss: 11213.603956
+INFO:root:Avg validation loss: 14536.725179 did not improve (14472.641998)
+INFO:root:-------------------------------
+INFO:root:Epoch 9
+INFO:root:Avg training loss: 10799.612124
+INFO:root:Avg validation loss: 14552.042257 did not improve (14472.641998)
+INFO:root:-------------------------------
+INFO:root:Epoch 10
+INFO:root:Avg training loss: 10383.642219
+INFO:root:Avg validation loss: 14782.522207 did not improve (14472.641998)
+INFO:root:-------------------------------
+INFO:root:Epoch 11
+INFO:root:Avg training loss: 10050.939868
+INFO:root:Avg validation loss: 14910.735321 did not improve (14472.641998)
+INFO:root:-------------------------------
+INFO:root:Epoch 12
+INFO:root:Avg training loss: 9665.027602
+INFO:root:Avg validation loss: 15063.228699 did not improve (14472.641998)
+INFO:root:-------------------------------
+INFO:root:Epoch 13
+INFO:root:Avg training loss: 9342.939793
+INFO:root:Avg validation loss: 14726.371938 did not improve (14472.641998)
+INFO:root:-------------------------------
+INFO:root:Epoch 14
+INFO:root:Avg training loss: 9190.448069
+INFO:root:Avg validation loss: 14730.144704 did not improve (14472.641998)
+INFO:root:-------------------------------
+INFO:root:Epoch 15
+INFO:root:Avg training loss: 9109.173033
+INFO:root:Avg validation loss: 14763.044820 did not improve (14472.641998)
+INFO:root:Finished fitting model number 1/1 ...
+INFO:root:--- Score: 104.96939855134929 
+INFO:root:--- Runtime: 842.0896136760712 for seconds ---
+INFO:root:--- Runtime: 885.9295535087585 seconds ---
+INFO:root:Finished Logging

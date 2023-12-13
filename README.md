@@ -14,7 +14,8 @@ It is recommended to set the session runtime to use a A100 GPU or better and ena
 This repository depends on [EEGEyeNet](https://github.com/ardkastrati/EEGEyeNet) as well as its requirements.  
 You can use git to clone their repository:  
 `git clone https://github.com/ardkastrati/EEGEyeNet.git`  
-No additional libraries are required.  
+You can install our requirements listed in requirements.txt through pip:  
+`pip install requirements.txt`
 
 ## Dataset
 EEGEyeNet's datasets are publicly available [here](https://osf.io/ktv7m).  
@@ -28,11 +29,13 @@ You can use git to clone this repository:
 `git clone https://github.com/AmCh-Q/CSCI6907Project.git`  
 Alterntatively, just download the python source code files.  
 Then copy/move the python source codes to your root EEGEyeNet directory.  
+`cp -l CSCI6907Project/our_models.py EEGEyeNet`  
+`cp -l CSCI6907Project/EEGViT_pretrained.py EEGEyeNet`  
 
 ## Launching Locally
-Ensure that your system has at least 16GB of VRAM and 16GB of RAM.
+Ensure that your system has at least 16GB of VRAM and 32GB of RAM.
 Then make sure your current working directory is EEGEyeNet and have downloaded the datasets and our code.  
-Then execute: `python3 main_CS6907_group_8.py`
+Then execute: `python3 main_CS6907_group_8.py`  
 
 ## Results
-Once execution is complete, the benchmark results of the models can be found in directory ./runs/*/info.log  
+Once execution is complete, the benchmark results of the models can be found in directory ./runs
